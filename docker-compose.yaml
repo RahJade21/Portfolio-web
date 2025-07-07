@@ -1,0 +1,94 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_NAME: your_db_name
+      DB_USER: your_user
+      DB_PASS: your_password
+
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:version: '3.8'
+
+services:
+  # Web application service
+  web:
+    build: .
+    container_name: portfolio_web
+    ports:
+      - "8080:80"  # Change 8080 to your preferred port
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_USER=portfolio_user        # Change this to your preferred username
+      - DB_PASS=portfolio_password    # Change this to a secure password
+      - DB_NAME=portfolio_db          # Change this to your preferred database name
+    volumes:
+      - ./:/var/www/html
+      - ./api/tmp:/var/www/html/api/tmp
+      - ./tmp:/var/www/html/tmp
+    networks:
+      - portfolio_network
+
+  # Database service
+  db:
+    image: mysql:8.0
+    container_name: portfolio_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password      # Change this to a secure root password
+      MYSQL_DATABASE: portfolio_db            # Change this to match your database name
+      MYSQL_USER: portfolio_user              # Change this to match your username above
+      MYSQL_PASSWORD: portfolio_password      # Change this to match your password above
+    ports:
+      - "3306:3306"  # Remove this line if you don't need external database access
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql  # Optional: for database initialization
+    networks:
+      - portfolio_network
+
+  # Optional: phpMyAdmin for database management
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: portfolio_phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "8081:80"  # Change 8081 to your preferred port
+    environment:
+      PMA_HOST: db
+      PMA_USER: portfolio_user        # Change this to match your database username
+      PMA_PASSWORD: portfolio_password # Change this to match your database password
+    depends_on:
+      - db
+    networks:
+      - portfolio_network
+
+# Define networks
+networks:
+  portfolio_network:
+    driver: bridge
+
+# Define volumes
+volumes:
+  db_data:
+      MYSQL_DATABASE: your_db_name
+      MYSQL_USER: your_user
+      MYSQL_PASSWORD: your_password
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:

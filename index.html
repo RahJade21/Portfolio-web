@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jacques+Francois&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+  <title>portfolio</title>
+</head>
+<style>
+  html {
+    scroll-behavior: smooth;
+    margin: 0;
+    padding: 0;
+  }
+  .card-3d {
+    perspective: 1000px;
+  }
+  .card-3d-inner {
+    transition: transform 0.1s ease, box-shadow 0.3s ease; /* ✅ Added box-shadow transition */
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+  .card-3d-inner.glowing {
+    box-shadow: 
+      0 0 20px rgba(133, 100, 44, 0.6),
+      0 0 40px rgba(143, 102, 32, 0.4),
+      0 0 60px rgba(236, 217, 183, 0.2);
+  }
+  .contact-button {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+  }
+  .contact-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background-color: #FFB22C;
+      transition: left 0.4s ease;
+      z-index: 0;
+  }
+  .contact-button:hover::before {
+      left: 0;
+  }
+  .contact-button:hover .contact-text {
+      color: #212528;
+  }
+  .contact-content {
+    position: relative;
+    z-index: 2;
+    transition: color 0.1s ease;
+  }
+  .contact-icon {
+      position: relative;
+      z-index: 2;
+      transition: filter 0.1s ease;
+  }
+  .phone-icon {
+    background-image: url('images/icons/phone-y.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+  .contact-button:hover .phone-icon {
+      background-image: url('images/icons/phone-b.png');
+  }
+
+  .skill-tab-btn.active {
+      background-color: #FFB22C !important;
+      color: #212528 !important;
+  }
+  .skill-tab-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+  }
+  .skill-card {
+      transition: all 0.3s ease;
+  }
+  .skill-card.hidden {
+      display: none;
+  }
+  /* Animation for tab switching */
+  .skill-container-fade {
+      opacity: 0;
+      transition: opacity 0.3s ease;
+  }
+  .skill-container-fade.visible {
+      opacity: 1;
+  }
+  /* Responsive tab buttons */
+  @media (max-width: 768px) {
+      .skill-tab-btn {
+          font-size: 0.875rem;
+          padding: 0.5rem 1rem;
+      }
+  }
+  
+  .jacques {
+    font-family: "Jacques Francois", serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+  .outfit {
+    font-family: "Outfit", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+  }
+</style>
+
+<body class="outfit bg-[#212528]">
+  <div class="jacques min-h-screen h-fit w-full bg-[#212528] relative">
+    <!-- navbar -->
+    <div id="homePage" id="navbar" class="w-full flex justify-between items-center px-8 py-8 z-10 bg-[#212528]">
+      <!-- Logo -->
+      <div class="flex items-center">
+        <h1 class="text-sm md:text-2xl text-white">Jaya Deva | NJD</h1>
+      </div>
+
+      <!-- Desktop Nav Links -->
+      <nav class="hidden md:flex space-x-6 text-white text-base">
+        <a href="#homePage" class="hover:text-yellow-400 transition">Home</a>
+        <a href="#worksPage" class="hover:text-yellow-400 transition">Works</a>
+        <a href="#experiencePage" class="hover:text-yellow-400 transition">Experience</a>
+        <a href="#skillPage" class="hover:text-yellow-400 transition">Skills</a>
+      </nav>
+
+      <!-- Phone Info (hidden on mobile) -->
+      <a href="#contactPage" class="hidden md:flex items-center gap-4 border border-[#FFB22C] px-4 p-2 contact-button">
+          <div class="contact-content flex items-center gap-4">
+              <div class="w-5 h-5 contact-icon phone-icon"></div>
+              <p class="text-[#FFB22C] font-sans font-bold contact-text">Contact Me</p>
+          </div>
+      </a>
+
+      <!-- Hamburger (mobile only) -->
+      <button id="hamburgerBtn" class="md:hidden text-white focus:outline-none">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu"
+      class="md:hidden w-full bg-[#272E32] px-8 flex flex-col gap-4 text-white text-lg transition-all duration-300 ease-in-out max-h-0 overflow-hidden">
+      <a href="#homePage" class="hover:text-yellow-400 transition">Home</a>
+      <a href="#worksPage" class="hover:text-yellow-400 transition">Works</a>
+      <a href="#experiencePage" class="hover:text-yellow-400 transition">Experience</a>
+      <a href="#skillPage" class="hover:text-yellow-400 transition">Skills</a>
+      <div class="flex items-center gap-2 pt-4 border-t border-gray-600">
+      </div>
+    </div>
+    <!-- main page -->
+    <div class="relative w-full h-[90vh] flex">
+      <div class="flex flex-col h-full w-full md:w-1/2 justify-center text-white pl-12 md:pl-36 gap-6">
+        <div class="absolute z-10 flex flex-col gap-6">
+          <div data-aos="fade-right" class="text-5xl md:text-[60pt]">Creating Ideas <br> Into Real Project</div>
+          <p data-aos="fade-right" class="line-clamp-2 max-w-[80%] md:max-w-xl pb-4 text-md md:text-2xl">I'm Jaya, informatic student with focus in Cyber Security</p>
+          <div data-aos="fade-up" class="w-fit h-fit flex flex-col md:flex-row gap-4">
+            <a href="#worksPage">
+              <button class="bg-[#D9D9D9] rounded-full p-2 px-8 text-black font-bold hover:bg-[#baa877] transition-all duration-300 ease-in-out">See my Work</button>
+            </a>
+            <a href="resume.pdf" target="_blank" class="hover:bg-[#3d3a32] transition-all duration-300 ease-in-out rounded-full">
+                <button class="border font-bold text-[#D9D9D9] border-3 border-[#FFB22C] rounded-full p-2 px-9">My Resume</button>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="h-full w-full md:w-1/2 flex justify-center items-center">
+        <div class="relative h-5/6 w-full">
+          <div class="h-full w-full bg-[url('images/img/dark_livingroom.png')] bg-cover bg-center">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- 
+  <div class="aboutMe h-[80vh] bg-[#212528] w-full flex">
+    <div class="w-full md:w-2/5 h-full">
+      <div>
+        <img src="images/img/Jaya.png" alt="Jaya" class="w-64 h-fit">
+      </div>
+    </div>
+    <div class="w-full md:w-3/5 h-full p-24">
+      <p class="text-5xl outfit font-bold text-white">About me</p>
+      <p class="text-xl outfit text-white max-w-2xl pt-8">Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur eum similique, sit illo dicta accusantium porro mollitia modi perferendis facere, nemo qui repellat quos excepturi quod aspernatur nihil ipsa, labore cumque neque enim ipsum dolor ducimus. Ad rerum vitae est tenetur ea praesentium ab. Voluptatibus quam necessitatibus iusto, assumenda corrupti illum iste, laborum odit distinctio illo magnam consectetur architecto esse! Odio nobis veniam fugiat esse voluptate ut libero voluptatibus necessitatibus.</p>
+    </div>
+  </div> -->
+
+  <!-- project card -->
+  <div id="project-container" class="h-fit w-full bg-[#212528] flex flex-wrap justify-center items-center px-10 pt-8 md:px-0 md:pt-12 gap-8 md:gap-16">
+    <!-- automatic content -->
+  </div>
+
+  <!-- project showcase -->
+  <div id="worksPage" class="h-fit w-full bg-[#212528] py-8 md:py-16 flex flex-col md:flex-row">
+    <div class="w-full md:w-3/5 h-full pt-12 flex flex-col gap-8">
+      <div data-aos="fade-right" class="w-fit w-fit flex flex-col px-10 md:px-8 md:pl-32 gap-2 md:gap-8 group cursor-pointer">
+        <div class="relative w-fit h-fit flex rounded-xl overflow-hidden transition-transform duration-300 group-hover:scale-105">
+          <img src="images/project/web-main.png" alt="web-main" class="h-full w-full object-cover rounded-xl">
+          
+          <!-- Hover overlay with "Visit me" text -->
+          <a href="https://github.com/RahJade21/Securesign-App" target="_blank">
+            <div class="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <span class="text-white text-2xl font-bold">Visit me</span>
+            </div>
+          </a>
+        </div>
+        <p class="text-white text-2xl md:text-4xl font-bold">Secure Signature App Web-based</p>
+        <p class="text-white text-1xl md:text-2xl max-w-3xl">Aims to develop a Digital Secure Signature App that provides users with a trusted method to sign documents electronically while ensuring data integrity and security.</p>
+      </div>
+    </div>
+    <div class="w-full h-full md:w-2/5 flex flex-col pt-8 md:pt-12 gap-8">
+      <div data-aos="fade-up" class="flex flex-col gap-2 md:gap-5 w-[80%] h-fit ml-10 group cursor-pointer">
+          <div class="relative w-fit h-fit bg-yellow-100 rounded-xl flex items-center px-16 py-4 overflow-hidden transition-transform duration-300 group-hover:scale-105">
+            <img src="images/project/web-design2.png" alt="web-design2" class="w-100 h-auto">
+            <!-- Hover overlay with "Visit me" text -->
+            <a href="https://github.com/RahJade21/Gadget-repair" target="_blank">
+              <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <span class="text-white text-2xl font-bold">Visit me</span>
+              </div>
+            </a>
+          </div>
+          <p class="text-white text-xl md:text-3xl font-bold">Simple Gadget Repair Web Design</p>
+      </div>
+      <div data-aos="fade-up" class="flex flex-col gap-2 md:gap-5 w-[80%] h-fit ml-10 group cursor-pointer">
+          <div class="relative w-fit h-fit bg-red-100 rounded-xl flex items-center px-16 py-4 overflow-hidden transition-transform duration-300 group-hover:scale-105">
+            <img src="images/project/web-design3.png" alt="web-design2" class="w-100 h-auto">
+            <!-- Hover overlay with "Visit me" text -->
+            <a href="https://github.com/RahJade21/Restaurant-web" target="_blank">
+              <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <span class="text-white text-2xl font-bold">Visit me</span>
+              </div>
+            </a>
+          </div>
+          <p class="text-white text-xl md:text-3xl font-bold">Simple Restaurant Web Design</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- competency -->
+  <div id="competency-container" class="bg-[#212528] h-fit w-full grid grid-rows md:grid-cols-3 py-10 px-8 md:px-32 gap-7 md:gap-14">
+    <!-- automatic content -->
+  </div>
+
+  <div id="experiencePage" class="bg-[#212528] h-fit w-full flex flex-col items-center pt-12 md:pt-28 gap-8">
+    <div data-aos="fade-down" class="flex flex-col items-center gap-8">
+      <div class="h-fit w-fit p-2 md:p-4 px-6 md:px-10 bg-[#272E32] rounded-full flex justify-center items-center text-white text-md md:text-xl font-semibold">
+        <p>💼 Education and Work</p>
+      </div>
+      <p class="text-2xl md:text-5xl px-5 md:px-0 text-white font-bold text-center">Academic Journey and Experience</p>
+    </div>
+    
+    <div class="bg-[#212528] h-fit w-full flex flex-col md:flex-row">
+      <div id="education-container" class="h-full w-full md:w-1/2 flex flex-col items-center pt-20 gap-12 md:gap-28">
+        <!-- automatic content -->
+      </div>
+      <div id="experience-container" class="h-full w-full md:w-1/2 flex flex-col items-center md:items-start py-10 md:py-20 gap-10">
+        <!-- automatic content -->
+      </div>
+    </div>
+  </div>
+  
+  <div id="skillPage" class="bg-[#212528] w-full h-fit flex flex-col items-center py-8 gap-8">
+    <div data-aos="fade-down" data-aos-delay="200" class="flex flex-col items-center gap-8">
+      <div class="h-fit w-fit p-2 md:p-4 px-6 md:px-10 bg-[#272E32] rounded-full flex justify-center items-center text-white text-md md:text-xl font-semibold">
+        <p>🎖️ Skills & Proficiency</p>
+      </div>
+      <p class="text-2xl md:text-5xl px-5 md:px-0 max-w-xs md:max-w-5xl text-white font-bold text-center">How I Can Contribute and My Skills</p>
+    </div>
+
+    <!-- Tab Navigation -->
+    <div class="flex flex-wrap justify-center gap-4 mb-8">
+        <button class="skill-tab-btn active bg-[#272E32] text-white px-6 py-3 rounded-full font-bold transition-all duration-300 hover:bg-[#FFB22C] hover:text-black" data-category="cyber">
+            Cyber Security
+        </button>
+        <button class="skill-tab-btn bg-[#272E32] text-white px-6 py-3 rounded-full font-bold transition-all duration-300 hover:bg-[#FFB22C] hover:text-black" data-category="code">
+            Programming
+        </button>
+        <button class="skill-tab-btn bg-[#272E32] text-white px-6 py-3 rounded-full font-bold transition-all duration-300 hover:bg-[#FFB22C] hover:text-black" data-category="design">
+            Design
+        </button>
+    </div>
+
+    <div id="skill-container" class="bg-[#212528] w-fit h-fit gap-8 md:gap-12 lg:gap-16 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 justify-items-center px-8 md:px-16 mb-8 md:mb-32">
+      <!-- automatic content -->
+    </div>
+  </div>
+
+  <div id="contactPage" class="bg-[#272E32] w-full h-fit">
+    <div class="w-full h-fit px-10 md:px-24 lg:px-32 flex flex-col md:flex-row items-start md:items-center pt-10 md:pt-24 gap-8 md:gap-24">
+      <div>
+        <div class="text-white font-bold text-[48pt]">Be in Touch</div>
+        <div class="h-1 w-32 bg-[#FFB22C]"></div>
+      </div>
+      <div class="flex justify-center items-center gap-3">
+        <img src="images/icons/email-y.png" alt="email-y" class="w-auto h-4">
+        <p class="text-[#FFB22C] text-xl font-bold">jayadeva2121@gmail.com</p>
+      </div>
+    </div>
+
+    <div class="bg-[#272E32] w-full h-fit py-10 flex flex-col md:flex-row gap-10 px-6 md:px-24 lg:px-32">
+      <!-- Contact Form -->
+      <form id="contactForm" class="w-full md:w-3/5 max-w-4xl flex flex-col gap-5">
+        <div class="w-full flex flex-col md:flex-row justify-between gap-5">
+          <input id="name" type="text" placeholder="Name" required
+            class="w-full md:w-[50%] h-16 bg-[#212528] text-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFB22C]">
+          <input id="email" type="email" placeholder="Email" required
+            class="w-full md:w-[50%] h-16 bg-[#212528] text-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFB22C]">
+        </div>
+        <input id="subject" type="text" placeholder="Subject" required
+          class="w-full h-16 bg-[#212528] text-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFB22C]">
+        <textarea rows="11" name="description" id="description" placeholder="Description" required
+          class="w-full bg-[#212528] text-white placeholder-gray-400 px-4 py-3 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-[#FFB22C]"></textarea>
+      </form>
+
+      <!-- Map and Button -->
+      <div class="w-full md:w-[35%] bg-[#212528] p-4 md:p-10 flex flex-col items-center gap-5">
+        <iframe id="googleMap" class="rounded-xl transition-all duration-300 w-full h-64 md:h-[300px]"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63449.4228147006!2d107.12662459692348!3d-6.317603670552745!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e699a97cdfd23f3%3A0xa467efa8d683cc31!2sCikarang%2C%20Kabupaten%20Bekasi%2C%20Jawa%20Barat!5e0!3m2!1sid!2sid!4v1750768248592!5m2!1sid!2sid"
+          style="border:0;" allowfullscreen="" loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <button id="mapInvertToggle"
+          class="text-white font-bold mt-3 p-2 rounded-full w-full md:w-[200px] bg-[#272E32] hover:bg-[#32383d] transition-all duration-300 transform hover:scale-105">
+          Dark Mode 🔄
+        </button>
+      </div>
+    </div>
+
+    <div class="flex justify-center pb-16">
+      <button type="submit" form="contactForm" class="h-fit w-fit p-2 px-12 rounded-xl bg-[#BA7803] text-white text-lg font-bold">Send</button>
+    </div>
+  </div>
+
+  <footer class="bg-[#212528] w-full h-fit flex flex-col justify-center items-center">
+    <div class="h-fit w-full p-8 flex justify-center items-center gap-10">
+      <div class="h-1 flex-1 bg-[#FFB22C]"></div>
+      <div id="about-container" class="h-fit w-fit flex justify-center gap-5 md:gap-10">
+        <!-- automatic content -->
+      </div>
+      <div class="h-1 flex-1 bg-[#FFB22C]"></div>
+    </div>
+  </footer>
+  
+  <!-- Math Captcha Modal -->
+  <div id="captchaModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-[#272E32] p-8 rounded-xl max-w-md w-full mx-4">
+      <h3 class="text-white text-xl font-bold mb-4">Security Check</h3>
+      <p class="text-white mb-4">Please solve this simple math problem:</p>
+      <div class="text-center mb-4">
+        <span id="mathQuestion" class="text-[#FFB22C] text-2xl font-bold"></span>
+      </div>
+      <input 
+        id="mathAnswer" 
+        type="number" 
+        placeholder="Your answer" 
+        class="w-full h-12 bg-[#212528] text-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFB22C] mb-4"
+      >
+      <div class="flex gap-4">
+        <button 
+          id="captchaSubmit" 
+          class="flex-1 bg-[#BA7803] text-white py-2 px-4 rounded-lg font-bold hover:bg-[#9d6403] transition"
+        >
+          Verify
+        </button>
+        <button 
+          id="captchaCancel" 
+          class="flex-1 bg-gray-600 text-white py-2 px-4 rounded-lg font-bold hover:bg-gray-700 transition"
+        >
+          Cancel
+        </button>
+      </div>
+      <div id="captchaError" class="text-red-400 text-sm mt-2 hidden"></div>
+    </div>
+  </div>
+  <script src="script.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+</body>
+</html>
