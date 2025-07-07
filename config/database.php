@@ -1,9 +1,9 @@
 <?php
 // Database configuration
-define('DB_HOST', 'localhost');
-define('DB_USER', 'root');
-define('DB_PASS', ''); // Default XAMPP password is empty
-define('DB_NAME', 'portfolio_db');
+define('DB_HOST', $_ENV['DB_HOST'] ?? 'db');
+define('DB_USER', $_ENV['DB_USER'] ?? 'portfolio_user');
+define('DB_PASS', $_ENV['DB_PASS'] ?? 'portfolio_password');
+define('DB_NAME', $_ENV['DB_NAME'] ?? 'portfolio_db');
 
 class Database {
     private $host = DB_HOST;

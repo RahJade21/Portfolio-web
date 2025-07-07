@@ -111,7 +111,7 @@ function validateInputLengths($input) {
 }
 
 // Updated require path for new folder structure
-require_once '../config/database.php';
+require_once __DIR__ . '/../config/database.php';
 
 // Email configuration
 define('CONTACT_EMAIL', 'jayadeva2121@gmail.com'); // Your email
